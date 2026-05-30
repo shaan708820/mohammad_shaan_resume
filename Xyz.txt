@@ -51,3 +51,28 @@ EOF
 
 
 aws eks create-addon --cluster-name shaan-cluster --addon-name aws-ebs-csi-driver --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/AmazonEKS_EBS_CSI_DriverRole
+
+
+
+
+
+eksctl utils associate-iam-oidc-provider --cluster shaan-cluster --region eu-north-1 --approve
+
+
+eksctl create iamserviceaccount \
+  --name ebs-csi-controller-sa \
+  --namespace kube-system \
+  --cluster shaan-cluster \
+  --region eu-north-1 \
+  --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+  --approve \
+  --role-only \
+  --role-name AmazonEKS_EBS_CSI_DriverRole
+
+
+aws eks create-addon \
+  --cluster-name shaan-cluster \
+  --region eu-north-1 \
+  --addon-name aws-ebs-csi-driver \
+  --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/AmazonEKS_EBS_CSI_DriverRole
+
