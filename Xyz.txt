@@ -33,14 +33,17 @@ EOF
 
 
 
-eksctl create iamserviceaccount \
+
+  eksctl create iamserviceaccount \
   --name ebs-csi-controller-sa \
   --namespace kube-system \
   --cluster shaan-cluster \
+  --region eu-north-1 \
   --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
   --approve \
   --role-only \
   --role-name AmazonEKS_EBS_CSI_DriverRole
+
 
 
 
